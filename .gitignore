@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+.ipynb_checkpoints/
+
+# Claude Code local settings (personal, not shared)
+.claude/settings.local.json
+
+CLAUDE.md
