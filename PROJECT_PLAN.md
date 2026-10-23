@@ -4,6 +4,8 @@
 
 Fill in names: **Person 1:** ________  **Person 2:** ________  **Person 3:** ________  **Person 4:** ________
 
+**Target venue:** ________  **Submission deadline:** ________  (must be peer-reviewed; avoid pay-to-publish venues with no real review)
+
 ---
 
 ## 0. How to use this document
@@ -31,6 +33,10 @@ Second question: if one machine is compromised, what is the **cheapest set of li
 | Cheapest links to cut to isolate an attacker | **Minimum Cut** = **Maximum Flow** | Polynomial (fast and exact) |
 
 **The story of our project:** the first problem is hard, so we try four different strategies (a fast approximation with a guarantee, a greedy heuristic, an exact search, and an ILP solver), compare them with real experiments, and contrast them with the second problem, which is easy. That contrast is the whole point.
+
+### The paper
+
+Our course also requires a publishable survey/research paper. One document serves as both the project report and the paper. Type: a survey of network monitor/sensor placement approaches plus a controlled experimental comparison (approximation, greedy, exact search, ILP, local search) on synthetic and real topologies, linked to attacker isolation by min-cut. Prior work exists (for example Suh et al. on monitor placement, Casado et al. on metaheuristics, NuMVC for vertex cover), so we do not claim a new algorithm. Our contribution is the unified, reproducible comparison on real topologies and whatever the benchmark shows about guarantees versus practice. Realistic target: a student or college-level peer-reviewed venue.
 
 ### Glossary (read once, refer back)
 
@@ -64,14 +70,14 @@ Why the work is mostly **understanding + experiments + proofs + report**: that i
 
 ## 2. Roles at a glance
 
-Work is split so each person owns **one syllabus area, one set of code files, one experiment, and one report chapter**. Estimated effort is about 20 to 25 hours each over 4 weeks.
+Work is split so each person owns **one syllabus area, one set of code files, one experiment, and one report chapter**. Estimated effort is about 22 to 26 hours each over 4 weeks.
 
 | | Area | You own (files) | Main experiment | Syllabus |
 |---|---|---|---|---|
-| **Person 1** | Approximation and greedy | `docs/approximation_proof.md`, `docs/complexity.md`, `experiments/greedy_counterexample.py`, `experiments/approx_ratio.py` | Approximation ratio vs graph size | Unit I, IV, VI |
-| **Person 2** | NP-completeness and ILP | `docs/np_completeness.md`, `sensorplace/ilp_models.py`, `tests/test_ilp_models.py`, `experiments/weighted.py` | Weighted sensor costs | Unit VI, practical 9 |
-| **Person 3** | Exact search and local search | `sensorplace/vertex_cover.py` (the only editor), `sensorplace/local_search.py`, `experiments/pruning_ablation.py`, `experiments/wall.py`, `docs/exact_search.md` | Where exact search breaks | Unit IV |
-| **Person 4** | Network flow, scenario, visualisation | `sensorplace/mincut.py`, `sensorplace/scenario.py`, `sensorplace/viz.py`, `experiments/scenario_demo.py`, `docs/flow.md`, report assembly, demo | Attacker isolation on a realistic network | Unit V |
+| **Person 1** | Approximation and greedy | `docs/approximation_proof.md`, `docs/complexity.md`, `experiments/greedy_counterexample.py`, `experiments/approx_ratio.py`, `sensorplace/topologies.py`, `data/topologies/`, `tests/test_topologies.py`, `experiments/benchmark.py`, `docs/literature/p1_approximation.md` | Approximation ratio vs graph size | Unit I, IV, VI |
+| **Person 2** | NP-completeness and ILP | `docs/np_completeness.md`, `sensorplace/ilp_models.py`, `tests/test_ilp_models.py`, `experiments/weighted.py`, `docs/literature/p2_complexity_ilp.md` | Weighted sensor costs | Unit VI, practical 9 |
+| **Person 3** | Exact search and local search | `sensorplace/vertex_cover.py` (the only editor), `sensorplace/local_search.py`, `experiments/pruning_ablation.py`, `experiments/wall.py`, `docs/exact_search.md`, `docs/literature/p3_exact_local_search.md` | Where exact search breaks | Unit IV |
+| **Person 4** | Network flow, scenario, visualisation | `sensorplace/mincut.py`, `sensorplace/scenario.py`, `sensorplace/viz.py`, `experiments/scenario_demo.py`, `docs/flow.md`, `docs/literature/p4_flow_security.md`, report assembly, demo | Attacker isolation on a realistic network | Unit V |
 
 **Shared:** the benchmark run (Person 1 runs it, everyone uses the result), the report (each person writes a chapter), and the viva (everyone must answer questions about everything).
 
@@ -81,7 +87,7 @@ Work is split so each person owns **one syllabus area, one set of code files, on
 
 1. **File ownership.** Only the owner edits a file. This avoids merge conflicts. If you need a change in someone else's file, message them.
 2. **One shared repo on GitHub.** Everyone clones it. Commit small and often. Pull before you start working each day.
-3. **No code without a test.** If you add a function, add a test that proves it works (valid output, or equal to brute force on small graphs). Run `pytest -q` before every commit; it must pass.
+3. **No code without a test.** If you add a function, add a test that proves it works (valid output, or equal to brute force on small graphs). Run `python -m pytest -q` before every commit; it must pass.
 4. **Results come from code.** Every number in the report must come from a script you can re-run. Never type numbers by hand.
 5. **Explain everything.** At the end of week 1, and again in week 3, each person teaches their area to the other three for 15 to 20 minutes. The viva will ask any of you about any part.
 6. **Ask early.** Stuck for more than 45 minutes on one thing means ask the team or ask Claude.
@@ -92,10 +98,10 @@ Work is split so each person owns **one syllabus area, one set of code files, on
 
 | Week | Everyone | Person 1 | Person 2 | Person 3 | Person 4 |
 |---|---|---|---|---|---|
-| **1: Learn** | Setup (section 5), study your area, 20-min teach-in at end of week | Study CLRS 35.1; draft proof | Study CLRS 34.5; draft reduction | Study KT 10.1; hand-trace the search | Study CLRS 26; hand-run Edmonds-Karp |
-| **2: Build** | Benchmark Day (Person 1 runs on day 1, commits `results.csv`) | Greedy counterexample; ratio plot | ILP models for VC / IS / clique + tests | Instrument solver; pruning ablation; wall experiment | Scenario network; scenario demo |
-| **3: Extend and write** | Write your own report chapter; second teach-in | Complexity table; findings paragraph | Weighted experiment | Local-search solver | Visualisation; disjoint-paths experiment |
-| **4: Finish** | Report assembly, demo rehearsal, mock viva, buffer | Review all proofs | Review report | Review code | Assemble report; demo script |
+| **1: Learn** | Setup (section 5), confirm venue and deadline by day 3, study your area, 20-min teach-in at end of week | Study CLRS 35.1; draft proof; start literature review (Task L); start real topologies (1.6) | Study CLRS 34.5; draft reduction; start literature review (Task L) | Study KT 10.1; hand-trace the search; start literature review (Task L) | Study CLRS 26; hand-run Edmonds-Karp; start literature review (Task L) |
+| **2: Build** | Benchmark Day (Person 1 runs on day 3, commits `results.csv`). End-of-week checkpoint: do the results, including real topologies, show something worth writing about? If not and we are behind, reassess scope. | Greedy counterexample; ratio plot; finish real topologies (1.6) by day 2 | ILP models for VC / IS / clique + tests | Instrument solver; pruning ablation; wall experiment | Scenario network; scenario demo |
+| **3: Extend and write** | Write your own report chapter as a paper section, including a half-page related-work subsection from your literature file; second teach-in | Complexity table; findings paragraph | Weighted experiment | Local-search solver | Visualisation; disjoint-paths experiment |
+| **4: Finish** | Paper assembly in the venue's template, internal review, demo rehearsal, mock viva, submission, buffer | Review all proofs | Review report | Review code | Assemble report; demo script |
 
 **Rule for week 4:** no new features. Only fixes, polish, and rehearsal.
 
@@ -104,8 +110,8 @@ Work is split so each person owns **one syllabus area, one set of code files, on
 ## 5. Everyone: week 1 setup checklist (about 1.5 hours)
 
 - [ ] One person creates a GitHub repo and pushes this project; everyone else clones it.
-- [ ] Everyone installs: `pip install -r requirements.txt`.
-- [ ] Everyone runs `pytest -q` and sees all tests pass.
+- [ ] Everyone installs: `python -m pip install -r requirements.txt`.
+- [ ] Everyone runs `python -m pytest -q` and sees all tests pass.
 - [ ] Everyone reads `sensorplace/graphs.py` and `sensorplace/vertex_cover.py` (about 150 lines) and writes down **three lines they don't understand**; bring those to the first team meeting.
 - [ ] Everyone runs this in a Python shell and looks at the output:
 
@@ -128,7 +134,7 @@ print(min_cut(E, 0, 29))
 
 ### PERSON 1: Approximation and Greedy
 
-**Your question to answer:** *Why does an algorithm with a proven guarantee (2-approximation) perform worse in practice than a simple greedy heuristic with no guarantee?*
+**Your question to answer:** *Does the 2-approximation, with its proven guarantee, actually beat a simple greedy heuristic in practice? Early experiments say no on hub-heavy graphs; confirm or refute this on all graph families.*
 
 #### Study first (about 5 hours, in this order)
 
@@ -171,7 +177,7 @@ Hints: `approx_matching` is one pass over the edges. For `greedy_degree`, look a
 
 **1.4 Run the benchmark, make the ratio plot** (about 4 hours)
 
-- On **Benchmark Day** (first day of week 2), run `python -m experiments.benchmark` and commit `results.csv`. It takes several minutes. If it's too slow, reduce `SIZES` in `benchmark.py` (you may edit that file) and say so in the report.
+- On **Benchmark Day** (week 2, day 3), run `python -m experiments.benchmark` and commit `results.csv`. If the benchmark is re-run after later changes, re-commit `results.csv`. It takes several minutes. If it's too slow, reduce `SIZES` in `benchmark.py` (you may edit that file) and say so in the report.
 - Write `experiments/approx_ratio.py`: read `results.csv` and produce `figures/approx_ratio.png`: x-axis n, y-axis ratio (algorithm size ÷ optimal size), one line per algorithm, one panel per graph family, with a horizontal line at ratio = 2.
 
 *Done when:* the plot has both algorithms in all three families, and the guarantee line at 2 is visible.
@@ -180,9 +186,27 @@ Hints: `approx_matching` is one pass over the edges. For `greedy_degree`, look a
 
 Write a paragraph in your own words, backed by the plot, that answers your question at the top. Do not guess; use the numbers. (Our early experiments suggest greedy is within a few percent of optimal on hub-heavy graphs while the 2-approximation is roughly 60% worse on average. Check whether your full results agree on all three families, and say honestly where they don't.)
 
+**1.6 Real network topologies** `sensorplace/topologies.py`, `data/topologies/` (about 4 hours)
+
+Add real networks to the benchmark. Use a public collection such as the Internet Topology Zoo (also see TopoHub); check each dataset's licence and cite it. Download 5 to 10 topologies of different sizes (about 20 to 200 nodes).
+
+Write `load_topology(path)` using `networkx.read_graphml` that returns a set of edges (u < v) with integer vertices: relabel nodes to 0..n-1, drop self-loops and duplicate edges, keep the largest connected component (and say so in the paper). Write a test in `tests/test_topologies.py` on at least two files (valid output, no self-loops, u < v). Add a "real" family to `experiments/benchmark.py`.
+
+Timing: start 1.6 in week 1 and finish it by week 2, day 2, so the benchmark on Benchmark Day (week 2, day 3) includes real topologies.
+
+*Done when:* the benchmark runs on at least 5 real topologies and `results.csv` contains the "real" family.
+
+**Task L: Literature review for the paper** `docs/literature/p1_approximation.md` (about 3 hours)
+
+Find 8 to 10 real sources on your area (papers, textbook chapters, surveys). For each write: the full citation, a link or DOI, 2 to 3 sentences in your own words on what it shows, and one sentence on how it relates to our project. Open every link or DOI yourself; never cite something you haven't confirmed exists, including anything an AI tool suggested.
+
+Starting points: Papadimitriou and Steiglitz, *Combinatorial Optimization: Algorithms and Complexity* (greedy lower bound); CLRS 35.1.
+
+*Done when:* 8 to 10 entries, each with a working link and your own summary, and you can name the two that matter most for our paper.
+
 #### Your deliverables
 
-`docs/approximation_proof.md`, `experiments/greedy_counterexample.py`, `experiments/approx_ratio.py`, `figures/approx_ratio.png`, `docs/complexity.md` (table owner), report chapter 3.1 and 5.1.
+`docs/approximation_proof.md`, `experiments/greedy_counterexample.py`, `experiments/approx_ratio.py`, `figures/approx_ratio.png`, `docs/complexity.md` (table owner), `sensorplace/topologies.py`, `data/topologies/`, `tests/test_topologies.py`, updated `experiments/benchmark.py`, `docs/literature/p1_approximation.md`, report chapter 3.1 and 5.1.
 
 #### Be ready to answer in the viva
 
@@ -255,11 +279,19 @@ Report how much cheaper (b) is than (a). *Done when:* a table of the three total
 
 From `results.csv` (column `ilp_s`), plot ILP time vs n for each family. Answer: does ILP scale better or worse than the exact search (Person 3's experiment)? *Done when:* the plot exists.
 
+**Task L: Literature review for the paper** `docs/literature/p2_complexity_ilp.md` (about 3 hours)
+
+Find 8 to 10 real sources on your area (papers, textbook chapters, surveys). For each write: the full citation, a link or DOI, 2 to 3 sentences in your own words on what it shows, and one sentence on how it relates to our project. Open every link or DOI yourself; never cite something you haven't confirmed exists, including anything an AI tool suggested.
+
+Starting points: Karp 1972; Suh et al. (link in README); Kleinberg-Tardos ch. 11 (weighted vertex cover).
+
+*Done when:* 8 to 10 entries, each with a working link and your own summary, and you can name the two that matter most for our paper.
+
 **2.6 Stretch (only if everything else is done):** LP relaxation. Solve the same ILP but with continuous variables 0 ≤ x_v ≤ 1. For vertex cover, optimal basic solutions use only 0, ½, and 1; rounding every x_v ≥ ½ up to 1 gives another 2-approximation (Kleinberg-Tardos 11.6). Compare it with `approx_matching`.
 
 #### Your deliverables
 
-`docs/np_completeness.md`, `sensorplace/ilp_models.py`, `tests/test_ilp_models.py`, `experiments/weighted.py`, ILP runtime plot, your row(s) in `docs/complexity.md`, report chapter 2 and 5.2.
+`docs/np_completeness.md`, `sensorplace/ilp_models.py`, `tests/test_ilp_models.py`, `experiments/weighted.py`, ILP runtime plot, your row(s) in `docs/complexity.md`, `docs/literature/p2_complexity_ilp.md`, report chapter 2 and 5.2.
 
 #### Be ready to answer in the viva
 
@@ -297,7 +329,7 @@ You are the **only person who edits `vertex_cover.py`**. Add to `exact_branch_an
 - an optional `stats=None` dictionary parameter that counts the number of search nodes visited;
 - two flags `use_degree1=True` and `use_bound=True` to switch the two pruning rules off.
 
-Default behaviour must not change. *Done when:* `pytest -q` still passes and calling with `stats={}` fills in a node count.
+Default behaviour must not change. *Done when:* `python -m pytest -q` still passes and calling with `stats={}` fills in a node count.
 
 **3.3 Pruning ablation experiment** `experiments/pruning_ablation.py` (about 3 hours)
 
@@ -325,9 +357,17 @@ Add tests: output is always a valid cover and never larger than the starting cov
 
 **3.6 Complexity row** in `docs/complexity.md` for the exact solver: worst case exponential; explain why in a few lines (the search tree can have up to about 2^V leaves) and why pruning doesn't change the worst case but helps in practice.
 
+**Task L: Literature review for the paper** `docs/literature/p3_exact_local_search.md` (about 3 hours)
+
+Find 8 to 10 real sources on your area (papers, textbook chapters, surveys). For each write: the full citation, a link or DOI, 2 to 3 sentences in your own words on what it shows, and one sentence on how it relates to our project. Open every link or DOI yourself; never cite something you haven't confirmed exists, including anything an AI tool suggested.
+
+Starting points: NuMVC (Cai et al.); Casado et al. (links in README); Kleinberg-Tardos 10.1.
+
+*Done when:* 8 to 10 entries, each with a working link and your own summary, and you can name the two that matter most for our paper.
+
 #### Your deliverables
 
-`vertex_cover.py` changes, `sensorplace/local_search.py` + tests, `experiments/pruning_ablation.py`, `experiments/wall.py` and plots, `docs/exact_search.md`, report chapter 3.2 and 5.3.
+`vertex_cover.py` changes, `sensorplace/local_search.py` + tests, `experiments/pruning_ablation.py`, `experiments/wall.py` and plots, `docs/exact_search.md`, `docs/literature/p3_exact_local_search.md`, report chapter 3.2 and 5.3.
 
 #### Be ready to answer in the viva
 
@@ -388,9 +428,17 @@ Add a test that the disjoint-paths count from `min_cut` with unit capacities mat
 
 You are the integrator: keep the README status checklist up to date, collect each person's chapter, make the report consistent (same notation, same figure style), write the introduction (chapter 1) and conclusion (chapter 6), and write the 10-minute demo script (see section 9). Edmonds-Karp's complexity row (O(V·E²) time, O(V+E) space; derive the reasoning) goes into `docs/complexity.md`.
 
+**Task L: Literature review for the paper** `docs/literature/p4_flow_security.md` (about 3 hours)
+
+Find 8 to 10 real sources on your area (papers, textbook chapters, surveys). For each write: the full citation, a link or DOI, 2 to 3 sentences in your own words on what it shows, and one sentence on how it relates to our project. Open every link or DOI yourself; never cite something you haven't confirmed exists, including anything an AI tool suggested.
+
+Starting points: Ford and Fulkerson 1956; Edmonds and Karp 1972; CLRS ch. 26; find sources yourself on flow/cut in network security.
+
+*Done when:* 8 to 10 entries, each with a working link and your own summary, and you can name the two that matter most for our paper.
+
 #### Your deliverables
 
-`docs/flow.md`, `sensorplace/scenario.py`, `experiments/scenario_demo.py`, `sensorplace/viz.py` and two figures, extra tests, assembled report, demo script, report chapter 4 and 1 and 6.
+`docs/flow.md`, `sensorplace/scenario.py`, `experiments/scenario_demo.py`, `sensorplace/viz.py` and two figures, extra tests, assembled report, demo script, `docs/literature/p4_flow_security.md`, report chapter 4 and 1 and 6.
 
 #### Be ready to answer in the viva
 
@@ -405,22 +453,29 @@ You are the integrator: keep the README status checklist up to date, collect eac
 
 | Milestone | When | Who | Done when |
 |---|---|---|---|
-| Setup complete | Week 1, day 2 | Everyone | All 4 laptops pass `pytest -q` |
+| Setup complete | Week 1, day 2 | Everyone | All 4 laptops pass `python -m pytest -q` |
+| Venue and deadline confirmed | Week 1, day 3 | Everyone; Person 4 records it at the top of this plan | The venue is peer-reviewed and the deadline is at the top of the plan |
 | Teach-in 1 | End of week 1 | Everyone | Each person explains their study topic for 15 min |
-| **Benchmark Day** | Week 2, day 1 | Person 1 runs; all use it | `results.csv` committed; everyone has looked at it |
+| **Benchmark Day** | Week 2, day 3 | Person 1 runs; all use it | `results.csv` committed; everyone has looked at it |
 | Experiments done | End of week 2 | Everyone | Each person's main experiment has a plot |
+| Literature reviews done | End of week 2 | Everyone | 8 to 10 verified sources each |
+| Week 2 checkpoint | End of week 2 | Everyone | Results are worth writing about; scope reassessed if behind |
 | Teach-in 2 | Middle of week 3 | Everyone | Each person presents their findings |
 | Chapters drafted | End of week 3 | Everyone | All chapters in the shared document |
+| Paper draft | End of week 3 | Everyone | All sections drafted in the paper template |
 | Report assembled | Week 4, day 3 | Person 4 | One consistent document |
 | Mock viva | Week 4, day 5 | Everyone | Every person has answered questions on every area |
+| Submission | Venue deadline | Person 4 submits, everyone reviews | Paper submitted by the venue deadline |
 
 ---
 
-## 8. Report outline and who writes what
+## 8. Report and paper outline
 
 | Chapter | Content | Writer |
 |---|---|---|
+| Abstract | Abstract and keywords, written last | Person 4 |
 | 1 | Introduction: real-world problem, objectives | Person 4 |
+| Related work | Related work overview, stitches the four subsections | Person 4 |
 | 2 | Theory: problem formulation, NP-completeness, relations among VC / IS / clique | Person 2 |
 | 3.1 | 2-approximation and greedy: algorithms and proofs | Person 1 |
 | 3.2 | Exact search and local search | Person 3 |
@@ -432,7 +487,9 @@ You are the integrator: keep the README status checklist up to date, collect eac
 | 5.4 | Experiment: campus scenario | Person 4 |
 | 6 | Conclusion and comparison of all methods | Person 4 (all review) |
 
-Each chapter should be about 1 to 3 pages. Every figure needs a caption saying what it shows and one sentence of interpretation.
+Each person's sections total about 1.5 to 2 pages in the paper (about 6 to 8 pages overall); full proofs and derivations go in an appendix or stay in docs/. Every figure needs a caption saying what it shows and one sentence of interpretation.
+
+Each chapter writer also writes a half-page "Related work" subsection from their literature file. The assembled document uses the target venue's template (commonly two-column IEEE or ACM), typically 6 to 8 pages.
 
 ---
 
@@ -440,7 +497,7 @@ Each chapter should be about 1 to 3 pages. Every figure needs a caption saying w
 
 1. **(1 min)** The problem: show the campus network picture. *(Person 4)*
 2. **(2 min)** Four strategies, one sentence each. Show the sensor placement they produce. *(Persons 1, 3)*
-3. **(2 min)** The key results: ratio plot (greedy beats the guaranteed algorithm) and the wall plot. *(Persons 1, 3)*
+3. **(2 min)** The key results: ratio plot (guaranteed vs greedy: what the results show) and the wall plot. *(Persons 1, 3)*
 4. **(1 min)** Weighted costs: cheaper with ILP. *(Person 2)*
 5. **(2 min)** Why it's hard (NP-completeness in one picture) vs the min-cut that's easy. *(Persons 2, 4)*
 6. **(2 min)** Questions. Anyone may be asked about anything.
@@ -455,6 +512,9 @@ Each chapter should be about 1 to 3 pages. Every figure needs a caption saying w
 - No unexplained code: if you can't explain a line, don't submit it.
 - Don't write the report text before you have the plots. Numbers first, then words.
 - Don't change someone else's file without telling them.
+- Don't claim a new algorithm or a result the experiments don't show.
+- Don't invent, pad or copy references; every cited source must be opened and at least its abstract read.
+- Don't submit to a venue that takes papers for a fee without real peer review; check with your guide.
 
 ---
 
@@ -466,6 +526,7 @@ Each chapter should be about 1 to 3 pages. Every figure needs a caption saying w
 4. Which method would you actually deploy on a real network and why? (Use our results.)
 5. How is min-cut different from vertex cover in difficulty, and why?
 6. What was the most surprising result in our experiments?
+7. What is our contribution, and what do we not claim?
 
 ---
 
@@ -473,6 +534,10 @@ Each chapter should be about 1 to 3 pages. Every figure needs a caption saying w
 
 - **CLRS** (Introduction to Algorithms): ch. 26 (max flow), ch. 34 (NP-completeness), ch. 35 (approximation algorithms).
 - **Kleinberg and Tardos, Algorithm Design:** ch. 7 (network flow), ch. 8 (NP), ch. 10.1 (finding small vertex covers), ch. 11 (approximation, including weighted vertex cover).
+- **Related work (starting points):**
+  - Suh, Guo, Kurose, Towsley, "Locating network monitors: complexity, heuristics, and coverage": https://web.cs.umass.edu/publication/docs/2004/UM-CS-2004-061.pdf
+  - Casado et al., "A Metaheuristic Approach for Solving Monitor Placement Problem": https://grafo.etsii.urjc.es/en/publication/casado-2023-a
+  - Cai et al., "NuMVC: An Efficient Local Search Algorithm for Minimum Vertex Cover", JAIR 2013: https://arxiv.org/pdf/1402.0584
 - **PuLP documentation:** https://coin-or.github.io/pulp/
 - **NetworkX documentation:** https://networkx.org/
 - **YouTube:** search "William Fiset max flow / Edmonds-Karp" for visual flow explanations.
