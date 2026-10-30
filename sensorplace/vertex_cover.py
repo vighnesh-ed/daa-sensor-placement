@@ -31,50 +31,80 @@ def greedy_degree(edges):
     return cover
 
 
-def exact_branch_and_bound(edges, time_limit=10.0):
-    """Exact search. Branch on the max-degree vertex v:
-         (1) v is in the cover, or (2) v is not -> all its neighbours are.
-    Pruning: degree-1 reduction + lower bound ceil(edges_left / max_degree).
-    Returns (cover, finished); finished=False means the time limit was hit and
-    the cover is the best found, not proven optimal."""
+def exact_branch_and_bound(edges, time_limit=10.0, stats=None,
+                           use_degree1=True, use_bound=True):
+    """Exact search for minimum vertex cover using branch-and-bound.
+
+    Branch on a maximum-degree vertex v:
+      (1) include v, or (2) exclude v and include all its neighbours.
+
+    Degree-1 reduction and the edge/max-degree lower bound can be disabled
+    independently for experiments. If `stats` is a dictionary, it is updated
+    with counts for recursive search nodes and pruning events.
+    """
     start = time.time()
-    best = [approx_matching(edges)]       # upper bound to prune against
+    best = [approx_matching(edges)]       # initial feasible upper bound
     finished = [True]
+    if stats is not None:
+        stats.setdefault("nodes", 0)
+        stats.setdefault("degree1_reductions", 0)
+        stats.setdefault("bound_prunes", 0)
+        stats.setdefault("incumbent_prunes", 0)
 
     def solve(adj, chosen):
+        if stats is not None:
+            stats["nodes"] += 1
         if time.time() - start > time_limit:
             finished[0] = False
             return
+
         adj = {v: set(ns) for v, ns in adj.items() if ns}
         chosen = set(chosen)
-        changed = True
-        while changed:                    # degree-1 rule: take the leaf's neighbour
-            changed = False
-            for u in list(adj):
-                if u in adj and len(adj[u]) == 1:
-                    w = next(iter(adj[u]))
-                    chosen.add(w)
-                    for x in adj[w]:
-                        adj[x].discard(w)
-                    del adj[w]
-                    changed = True
-            adj = {v: ns for v, ns in adj.items() if ns}
+
+        if use_degree1:
+            changed = True
+            while changed:
+                changed = False
+                for u in list(adj):
+                    if u in adj and len(adj[u]) == 1:
+                        w = next(iter(adj[u]))
+                        chosen.add(w)
+                        if stats is not None:
+                            stats["degree1_reductions"] += 1
+                        for x in adj[w]:
+                            adj[x].discard(w)
+                        del adj[w]
+                        changed = True
+                adj = {v: ns for v, ns in adj.items() if ns}
+
         if len(chosen) >= len(best[0]):
+            if stats is not None:
+                stats["incumbent_prunes"] += 1
             return
         if not adj:
             best[0] = chosen
             return
-        m = sum(len(ns) for ns in adj.values()) // 2
-        dmax = max(len(ns) for ns in adj.values())
-        if len(chosen) + -(-m // dmax) >= len(best[0]):
-            return
+
+        if use_bound:
+            m = sum(len(ns) for ns in adj.values()) // 2
+            dmax = max(len(ns) for ns in adj.values())
+            lower_bound = -(-m // dmax)
+            if len(chosen) + lower_bound >= len(best[0]):
+                if stats is not None:
+                    stats["bound_prunes"] += 1
+                return
+
         v = max(adj, key=lambda x: len(adj[x]))
-        a1 = {x: set(ns) for x, ns in adj.items()}       # branch 1: v in cover
+
+        # Branch 1: choose v; all incident edges are then covered.
+        a1 = {x: set(ns) for x, ns in adj.items()}
         for u in a1[v]:
             a1[u].discard(v)
         del a1[v]
         solve(a1, chosen | {v})
-        nb = set(adj[v])                                  # branch 2: v out
+
+        # Branch 2: do not choose v; every neighbour must be chosen.
+        nb = set(adj[v])
         a2 = {x: set(ns) for x, ns in adj.items()}
         for w in nb:
             for u in a2[w]:
