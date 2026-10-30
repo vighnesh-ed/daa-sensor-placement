@@ -1,0 +1,17 @@
+n,mode,nodes,seconds,finished,cover_size
+20,no_pruning,79,0.000427,True,11
+20,degree1_only,7,7.8e-05,True,11
+20,bound_only,27,0.000184,True,11
+20,both,7,7.2e-05,True,11
+30,no_pruning,977,0.003741,True,17
+30,degree1_only,27,0.000377,True,17
+30,bound_only,155,0.001577,True,17
+30,both,21,0.000298,True,17
+40,no_pruning,2803,0.01154,True,22
+40,degree1_only,13,0.000251,True,22
+40,bound_only,399,0.003283,True,22
+40,both,11,0.00027,True,22
+50,no_pruning,17927,0.081098,True,28
+50,degree1_only,41,0.000731,True,28
+50,bound_only,1539,0.014839,True,28
+50,both,33,0.000876,True,28

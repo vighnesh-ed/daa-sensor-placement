@@ -1,0 +1,15 @@
+family,n,edges,seconds,finished,cover_size,search_nodes
+random_avg_degree_8,20,90,0.000331,True,14,17
+random_avg_degree_8,40,170,0.001908,True,27,111
+random_avg_degree_8,60,229,0.010009,True,39,437
+random_avg_degree_8,80,322,0.064654,True,52,2601
+random_avg_degree_8,100,403,0.340515,True,65,10237
+random_avg_degree_8,120,486,2.76996,True,79,77257
+random_avg_degree_8,160,631,10.001671,False,104,236257
+hub_heavy,20,64,0.000194,True,13,13
+hub_heavy,40,144,0.000701,True,25,39
+hub_heavy,60,224,0.001874,True,37,91
+hub_heavy,80,304,0.004361,True,47,127
+hub_heavy,100,384,0.011669,True,59,305
+hub_heavy,120,464,0.01681,True,69,347
+hub_heavy,160,624,0.170046,True,95,3519

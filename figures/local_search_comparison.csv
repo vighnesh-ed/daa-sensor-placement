@@ -1,0 +1,16 @@
+n,repeat,edges,greedy_size,local_search_size,exact_size,exact_finished
+12,0,19,5,5,5,True
+12,1,26,7,7,7,True
+12,2,19,6,6,6,True
+12,3,19,8,7,7,True
+12,4,23,6,6,6,True
+16,0,30,9,9,9,True
+16,1,26,9,9,9,True
+16,2,25,9,9,9,True
+16,3,36,10,9,9,True
+16,4,32,10,9,9,True
+20,0,33,11,11,11,True
+20,1,42,12,12,12,True
+20,2,39,11,11,11,True
+20,3,36,11,11,10,True
+20,4,36,11,11,11,True
